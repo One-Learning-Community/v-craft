@@ -61,10 +61,18 @@ class NodeService {
 
     editor.indicator.setIsForbidden(!editor.draggedNode.canBeSibling(this.getCurrentNode()));
 
-    if (this.onLeftHalf(cursor)) {
-      editor.indicator.pointBefore(this.getElement());
+    if (this.isCanvasVertical()) {
+      if (this.onTopHalf(cursor)) {
+        editor.indicator.pointInsideTop(this.getElement());
+      } else {
+        editor.indicator.pointInside(this.getElement());
+      }
     } else {
-      editor.indicator.pointAfter(this.getElement());
+      if (this.onLeftHalf(cursor)) {
+        editor.indicator.pointBefore(this.getElement());
+      } else {
+        editor.indicator.pointAfter(this.getElement());
+      }
     }
   }
 
@@ -101,10 +109,18 @@ class NodeService {
       return;
     }
 
-    if (this.onLeftHalf(cursor)) {
-      draggedNode.insertBefore(currentNode);
+    if (this.isCanvasVertical()) {
+      if (this.onTopHalf(cursor)) {
+        draggedNode.insertBefore(currentNode);
+      } else {
+        draggedNode.insertAfter(currentNode);
+      }
     } else {
-      draggedNode.insertAfter(currentNode);
+      if (this.onLeftHalf(cursor)) {
+        draggedNode.insertBefore(currentNode);
+      } else {
+        draggedNode.insertAfter(currentNode);
+      }
     }
   }
 
@@ -140,6 +156,19 @@ class NodeService {
 
     editor.dragNode(null);
     editor.indicator.hide();
+  }
+
+  isCanvasVertical() {
+    const currentNode = this.getCurrentNode();
+    const editor = this.getEditor();
+
+    let canvasNode = currentNode.parent;
+
+    while (canvasNode && !canvasNode.isCanvas()) {
+      canvasNode = canvasNode.parent;
+    }
+
+    return !canvasNode || editor.getCraftConfig(canvasNode).canvasFlowDirection !== 'horizontal';
   }
 }
 

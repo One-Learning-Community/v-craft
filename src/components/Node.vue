@@ -6,6 +6,7 @@
     :draggable="dragEnabled && isDraggable"
     @dragstart.native="handleDragStart"
     @dragover.native="handleDragOver"
+    @dragleave.native="handleDragLeave"
     @drop.native="handleDrop"
     @dragend.native="handleDragEnd"
     @click.native="selectNode"
@@ -81,11 +82,17 @@ export default {
         clientY: event.clientY,
       });
     },
+    handleDragLeave(event) {
+      // Marks as invalid target when dragging off a section
+      this.cancelDefault(event);
+      this.editor.indicator.setIsForbidden(true);
+    },
     handleDragEnd(event) {
       event.stopPropagation();
 
       this.editor.dragNode(null);
       this.editor.indicator.hide();
+      this.dragEnabled = false;
     },
     selectNode(event) {
       event.stopPropagation();
