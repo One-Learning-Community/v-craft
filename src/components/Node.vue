@@ -2,8 +2,8 @@
   <component
     :is="editor.findResolver(node.componentName)"
     v-bind="node.props"
-    :class="{ 'cf-node-selected': isSelected }"
-    :draggable="isDraggable"
+    :class="{ 'cf-node-selected': isSelected, 'cf-node-draggable': isDraggable }"
+    :draggable="dragEnabled && isDraggable"
     @dragstart.native="handleDragStart"
     @dragover.native="handleDragOver"
     @drop.native="handleDrop"
@@ -14,6 +14,7 @@
       v-for="node in node.children" :key="node.uuid"
       :node="node"
     />
+    <template #drag-handle><span v-if="editor.enabled && isSelected" class="cf-node-drag-handle" @mousedown="dragEnabled = true" @mouseup="dragEnabled = false" /></template>
   </component>
 </template>
 
@@ -32,6 +33,7 @@ export default {
   data() {
     return {
       nodeService: new NodeService(this),
+      dragEnabled: false,
     };
   },
   computed: {
@@ -40,7 +42,7 @@ export default {
     },
     isDraggable() {
       return this.editor.enabled && this.node.isDraggable();
-    },
+    }
   },
   provide() {
     return {
