@@ -38,9 +38,11 @@ export default {
   background-color: rgb(15, 177, 88);
   transition: all 0.3s;
   z-index: 1000;
+  pointer-events: none;
 
   &.forbidden {
-    background-color: rgb(255, 24, 93);
+    //background-color: rgb(255, 24, 93);
+    opacity: 0;
   }
 }
 </style>
