@@ -10,6 +10,7 @@
     @drop.native="handleDrop"
     @dragend.native="handleDragEnd"
     @click.native="selectNode"
+    :id="`editor-node-${node.uuid}`"
   >
     <Node
       v-for="node in node.children" :key="node.uuid"
